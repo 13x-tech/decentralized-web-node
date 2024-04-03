@@ -141,6 +141,161 @@ Object Signing / Encryption |
 This will be updated
 :::
 
+## DWN Protocols
+Protocols are used to describe common rules that DWNs will follow when dealing with specific types and structures of data.
+
+This will promote interoperability between users and apps.
+
+Below are 3 examples of protocol definitions, ranging from simple to advanced.
+
+<tab-panels selected-index="0">
+  <nav>
+    <button type="button">Minimal Protocols Example</button>
+    <button type="button">Nested Protocols Example</button>
+    <button type="button">Protocol With Roles Example</button>
+  </nav>
+
+  <section>
+
+  ##### Minimal Protocols Example
+
+  ::: example Minimal Protocols Example
+
+  ```json
+  {
+    "protocol": "http://minimal.xyz",
+    "published": false,
+    "types": {
+      "foo": {}
+    },
+    "structure": {
+      "foo": {}
+    }
+  }
+  ```
+  </section>
+
+  <section>
+
+  ##### Nested Protocols Example
+
+  ::: example Nested Protocols Example
+
+  ```json
+  {
+    "protocol": "http://nested.xyz",
+    "published": false,
+    "types": {
+      "foo": {
+        "schema": "foo",
+        "dataFormats": [
+          "text/plain"
+        ]
+      },
+      "bar": {
+        "schema": "bar",
+        "dataFormats": [
+          "text/plain"
+        ]
+      },
+      "baz": {
+        "schema": "baz",
+        "dataFormats": [
+          "text/plain"
+        ]
+      }
+    },
+    "structure": {
+      "foo": {
+        "bar": {
+          "baz" : {}
+        }
+      }
+    }
+  }
+  ```
+  </section>
+
+  <section>
+
+  ##### Protocol with Roles example
+
+  ::: example Protocol with Roles example
+
+  ```json
+  {
+    "protocol": "http://thread-role.xyz",
+    "published": true,
+    "types": {
+      "thread": {},
+      "participant": {},
+      "admin": {},
+      "globalAdmin": {},
+      "chat": {}
+    },
+    "structure": {
+      "globalAdmin": {
+        "$role": true
+      },
+      "thread": {
+        "$actions": [
+          {
+            "role": "thread/participant",
+            "can": [
+              "read"
+            ]
+          }
+        ],
+        "admin": {
+          "$role": true
+        },
+        "participant": {
+          "$role": true,
+          "$actions": [
+            {
+              "role": "thread/participant",
+              "can": [
+                "read",
+                "create"
+              ]
+            }
+          ]
+        },
+        "chat": {
+          "$actions": [
+            {
+              "role": "thread/participant",
+              "can": [
+                "create",
+                "update",
+                "read",
+                "query",
+                "subscribe"
+              ]
+            },
+            {
+              "role": "thread/admin",
+              "can": [
+                "co-update",
+                "co-delete"
+              ]
+            },
+            {
+              "role": "globalAdmin",
+              "can": [
+                "co-delete"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+  ```
+  </section>
+</tab-panels>
+
+
 ## Messages
 
 ::: warning
